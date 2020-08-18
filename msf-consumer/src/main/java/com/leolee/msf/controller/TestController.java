@@ -1,6 +1,8 @@
 package com.leolee.msf.controller;
 
-import com.leolee.msf.annotation.SysLog;import com.leolee.msf.feignInterface.TestClinet;import com.leolee.msf.sysEnum.SysLogEnum;import org.slf4j.Logger;
+import com.leolee.msf.annotation.SysLog;import com.leolee.msf.feignInterface.TestClinet;
+import com.leolee.msf.service.serviceInterface.TestService;
+import com.leolee.msf.sysEnum.SysLogEnum;import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +30,9 @@ public class TestController {
 
     @Autowired
     private TestClinet testClinet;
+
+    @Autowired
+    private TestService testService;
 
 
     /**
@@ -72,6 +77,19 @@ public class TestController {
     public String getFeignHello() {
         logger.info("日志数据拉");
         return testClinet.feignHello();
+    }
+
+    /**
+     * 功能描述: <br> Hystrix验证
+     * 〈〉
+     * @Param: []
+     * @Return: java.lang.String
+     * @Author: LeoLee
+     * @Date: 2020/8/18 23:38
+     */
+    @RequestMapping(value = "/value", method = RequestMethod.GET)
+    public String getFeignValue() {
+        return testService.getFeignValue();
     }
 
 }

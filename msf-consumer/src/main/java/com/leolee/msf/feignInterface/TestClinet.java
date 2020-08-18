@@ -9,4 +9,7 @@ public interface TestClinet {
 
     @RequestMapping(value = "/test/hello", method = RequestMethod.GET)
     public String feignHello();
+
+    @RequestMapping(value = "/test/value", method = RequestMethod.GET)
+    public String feignValue();
 }
