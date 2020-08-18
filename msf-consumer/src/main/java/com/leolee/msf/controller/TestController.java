@@ -1,6 +1,6 @@
 package com.leolee.msf.controller;
 
-import com.leolee.msf.feignInterface.TestClinet;import org.slf4j.Logger;
+import com.leolee.msf.annotation.SysLog;import com.leolee.msf.feignInterface.TestClinet;import com.leolee.msf.sysEnum.SysLogEnum;import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,6 +67,7 @@ public class TestController {
      * @Author: LeoLee
      * @Date: 2020/8/14 17:42
      */
+    @SysLog(value = "这是一个日志记录", type = SysLogEnum.BUSSINESS)
     @RequestMapping(value = "/hello3", method = RequestMethod.GET)
     public String getFeignHello() {
         logger.info("日志数据拉");

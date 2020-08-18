@@ -2,7 +2,10 @@ package com.leolee.msf.aspect;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.leolee.msf.annotation.SysLog;import com.leolee.msf.sysEnum.SysLogEnum;import com.leolee.msf.utils.IPUtils;import org.aspectj.lang.ProceedingJoinPoint;
+import com.leolee.msf.annotation.SysLog;
+import com.leolee.msf.sysEnum.SysLogEnum;
+import com.leolee.msf.utils.IPUtils;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -30,15 +33,14 @@ public class SysLogAspect {
     @Autowired
     private Gson gson;
 
-//    @Pointcut("execution(* com.leolee.*.controller.*(..))")
     @Pointcut("@annotation(com.leolee.msf.annotation.SysLog)")
     public void SysLog() {
 
     }
 
     @Before("SysLog()")
-    public void doBefore(ProceedingJoinPoint joinPoint) throws Throwable {
-        sysLogHandler(joinPoint, getExecutionResult(joinPoint.proceed()));
+    public void doBefore(JoinPoint joinPoint) throws Throwable {
+        sysLogHandler(joinPoint, null);
     }
 
 
@@ -51,7 +53,7 @@ public class SysLogAspect {
      * @Author: LeoLee
      * @Date: 2020/8/17 16:30
      */
-    private void sysLogHandler(ProceedingJoinPoint joinPoint, String succeed) {
+    private void sysLogHandler(JoinPoint joinPoint, String succeed) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
 
