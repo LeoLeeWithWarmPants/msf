@@ -1,0 +1,6 @@
+server:
+  port: 1003
+
+spring:
+  application:
+    name: hystrix-dashboard
