@@ -10,6 +10,13 @@ spring:
 logging:
   config: classpath:logback-spring.xml
 
+# 开启所有/actuator下的端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 ---
 spring:
   profiles:
