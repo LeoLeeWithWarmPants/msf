@@ -17,19 +17,21 @@ management:
       exposure:
         include: "*"
 
-#ribbon:
-#  readtimeout: 60000
-#  ConnectTimeout: 60000
-#
-#hystrix:
-#  command:
-#    default:
-#      execution:
-#        isolation:
-#          thread:
-#            timeoutInMilliseconds: 10000
-#  metrics:
-#    polling-interval-ms: 10000
+eureka-client:
+  ribbon:
+#   NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule # 默认为；轮询，这里改为随机
+    ConnectTimeout: 5000 # 连接超时时间(ms)
+    ReadTimeout: 5000 # 通信超时时间(ms)
+feign:
+  hystrix:
+    enabled: true # 开启Feign的熔断功能
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000 # 设置hystrix的超时时间为6000ms
 
 
 ---
