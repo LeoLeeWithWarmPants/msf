@@ -4,3 +4,17 @@ server:
 spring:
   application:
     name: hystrix-dashboard
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:1001/eureka/
+
+#聚合的工程  这里演示聚合eureka-consumer这个消费工程，多个消费者，用逗号分开配置在app-config
+turbine:
+  aggregator:
+#    cluster-config: default
+    cluster-config: FEIGN-CONSUMER #请求集群名称http://localhost:1003/turbine.stream?cluster=FEIGN-CONSUMER
+  app-config: eureka-consumer
+#  cluster-name-expression: new String("default")
+  cluster-name-expression: new String("FEIGN-CONSUMER")
