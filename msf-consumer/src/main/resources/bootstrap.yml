@@ -19,7 +19,12 @@ management:
 
 eureka-client:
   ribbon:
-#   NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule # 默认为；轮询，这里改为随机
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule #配置规则 随机
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule #配置规则 轮询
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RetryRule #配置规则 重试
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.WeightedResponseTimeRule #配置规则 响应时间权重
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule # 默认为；轮询，这里改为随机
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.BestAvailableRule #配置规则 最空闲连接策略
     ConnectTimeout: 5000 # 连接超时时间(ms)
     ReadTimeout: 5000 # 通信超时时间(ms)
 feign:
