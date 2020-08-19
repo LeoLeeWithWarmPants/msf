@@ -24,11 +24,11 @@ public class TestController {
 
     @RequestMapping(value = "/value", method = RequestMethod.GET)
     public String getValue() {
-        try {
-            Thread.sleep(5000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(1000L);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         logger.info("Hystrix熔断测试");
         return "111";
     }

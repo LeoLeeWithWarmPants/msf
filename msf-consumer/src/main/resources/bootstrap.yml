@@ -17,13 +17,20 @@ management:
       exposure:
         include: "*"
 
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 10000
+#ribbon:
+#  readtimeout: 60000
+#  ConnectTimeout: 60000
+#
+#hystrix:
+#  command:
+#    default:
+#      execution:
+#        isolation:
+#          thread:
+#            timeoutInMilliseconds: 10000
+#  metrics:
+#    polling-interval-ms: 10000
+
 
 ---
 spring:
