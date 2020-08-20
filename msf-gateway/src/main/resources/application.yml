@@ -3,6 +3,8 @@ server:
 spring:
   application:
     name: gateway
+  profiles:
+    active: dev
   cloud:
     gateway:
 #      discovery:
@@ -19,6 +21,19 @@ spring:
             - StripPrefix=1 #去掉前缀，具体实现参考StripPrefixGatewayFilterFactory
             - AddResponseHeader=X-Response-Default-Foo, Default-Bar
 
+---
+spring:
+  profiles:
+    active: dev
+  cloud:
+    config:
+      name: ${spring.application.name}
+      uri: http://localhost:1002/
+      profile: dev
+      label: master
+      discovery:
+        enabled: true
+        service-id: config-center
 eureka:
   client:
     serviceUrl:
