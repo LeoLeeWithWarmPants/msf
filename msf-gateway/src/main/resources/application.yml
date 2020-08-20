@@ -5,9 +5,19 @@ spring:
     name: gateway
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
+#      discovery:
+#        locator:
+#          enabled: true # 开启通过服务中心的自动根据 serviceId 创建路由的功能
+      routes: #路由映射，注意这里是数组，下面的路由配置可以是多个
+          # 该配置路由例子：http://localhost:1004/eureka-client/test/hello
+        - id: ribbon-route #标志号
+          uri: lb://EUREKA-CLIENT #路由映射目标路径 euraka注册服务的服务名（大写）
+          order: 0
+          predicates:
+            - Path=/eureka-client/** #匹配规则，也是暴露的映射路径
+          filters:
+            - StripPrefix=1 #去掉前缀，具体实现参考StripPrefixGatewayFilterFactory
+            - AddResponseHeader=X-Response-Default-Foo, Default-Bar
 
 eureka:
   client:
