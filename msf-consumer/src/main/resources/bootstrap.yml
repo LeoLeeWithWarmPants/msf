@@ -17,7 +17,7 @@ management:
       exposure:
         include: "*"
 
-eureka-client:
+database-web:
   ribbon:
 #    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule #配置规则 随机
 #    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule #配置规则 轮询
@@ -36,7 +36,7 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 10000 # 设置hystrix的超时时间为6000ms
+            timeoutInMilliseconds: 70000 # 设置hystrix的超时时间为6000ms
 
 
 ---
