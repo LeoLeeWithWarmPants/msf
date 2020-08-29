@@ -80,7 +80,7 @@
 
     <!-- 开发、测试环境 -->
     <springProfile name="dev">
-        <logger name="com.leolee.eurakaconsumer" level="INFO" />
+        <logger name="com.leolee.msf" level="DEBUG" />
         <logger name="org.springframework.web" level="INFO"/>
         <root level="INFO">
             <appender-ref ref="console"/>
@@ -89,7 +89,7 @@
 
     <!-- 生产环境 -->
     <springProfile name="test">
-        <logger name="com.leolee.eurakaconsumer" level="ERROR" />
+        <logger name="com.leolee.msf" level="ERROR" />
         <logger name="org.springframework.web" level="INFO"/>
         <root level="INFO">
             <appender-ref ref="console"/>
