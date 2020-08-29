@@ -4,6 +4,7 @@ server:
 spring:
   application:
     name: eureka-client
+    dataSourceName: client
   profiles:
     active: dev
 
@@ -40,8 +41,15 @@ spring:
       pool:
         max-idle: 8 # 最大空闲连接数 默认8
         max-active: 8 # 最大活跃链接数 默认8
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/msf-${spring.application.dataSourceName}?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: lyl512240816
 
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:1001/eureka/
+
+

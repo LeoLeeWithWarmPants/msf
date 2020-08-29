@@ -1,5 +1,7 @@
 package com.leolee.msf.controller;
 
+import com.google.gson.Gson;
+import com.leolee.msf.service.serviceInterface.TestService;
 import com.leolee.msf.utils.RedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +21,15 @@ public class TestController {
     private String hello;
 
     @Autowired
+    private Gson gson;
+
+    @Autowired
     private RedisUtils redisUtils;
+
+
+    @Autowired
+    private TestService testService;
+
 
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
     public String getConfigHello() {
@@ -48,6 +58,12 @@ public class TestController {
     @RequestMapping(value = "/redis/value", method = RequestMethod.POST)
     public boolean setRedisValue(String key, String value) {
         return redisUtils.set(key, value);
+    }
+
+
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public String getTestList() {
+        return gson.toJson(testService.getTestList());
     }
 
 }

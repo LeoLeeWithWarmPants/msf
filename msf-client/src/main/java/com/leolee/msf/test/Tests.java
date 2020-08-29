@@ -115,6 +115,7 @@ public class Tests extends Thread {
                 buf.compact();
                 bytesRead = fileChannel.read(buf);
             }
+            fileChannel.close();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -279,9 +280,14 @@ public class Tests extends Thread {
     }
 
 
-//    public static void main(String[] args) throws IOException, InterruptedException {
+    public void nioFileChannelTest() {
+
+    }
+
+
+    public static void main(String[] args) throws IOException, InterruptedException {
 ////        Tests.nomalReadFileContent("C:" + File.separator + "Users" + File.separator + "LeoLee" + File.separator + "Desktop" + File.separator + "test.txt");
-////        Tests.nioReadFileContent("C:" + File.separator + "Users" + File.separator + "LeoLee" + File.separator + "Desktop" + File.separator + "test.txt");
+        Tests.nioReadFileContent("C:" + File.separator + "Users" + File.separator + "LeoLee" + File.separator + "Desktop" + File.separator + "test.txt");
 //
 ////        Tests.getFileByteLenth("C:" + File.separator + "Users" + File.separator + "LeoLee" + File.separator + "Desktop" + File.separator + "test.txt");
 ////        Tests.getFileChannelSize("C:" + File.separator + "Users" + File.separator + "LeoLee" + File.separator + "Desktop" + File.separator + "test.txt");
@@ -301,5 +307,5 @@ public class Tests extends Thread {
 //            pool.submit(tests);
 //        }
 //        System.out.println(Thread.currentThread().getName());
-//    }
+    }
 }
