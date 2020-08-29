@@ -45,7 +45,7 @@ public class TestController {
      */
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
     public String getrRestTemplateHello() {
-        ServiceInstance serviceInstance = loadBalancerClient.choose("eureka-client");
+        ServiceInstance serviceInstance = loadBalancerClient.choose("database-web");
         String url = "http://" + serviceInstance.getHost() + ":" + serviceInstance.getPort() + "/test/hello";
         System.out.println(url);
         return restTemplate.getForObject(url, String.class);
@@ -61,7 +61,7 @@ public class TestController {
      */
     @RequestMapping(value = "/hello2", method = RequestMethod.GET)
     public String getRibbonHello() {
-        return restTemplate.getForObject("http://eureka-client/test/hello", String.class);
+        return restTemplate.getForObject("http://database-web/test/hello", String.class);
     }
 
     /**

@@ -1,7 +1,9 @@
 package com.leolee.msf.controller;
 
 import com.google.gson.Gson;
+import com.leolee.msf.annotation.SysLog;
 import com.leolee.msf.service.serviceInterface.TestService;
+import com.leolee.msf.sysEnum.SysLogEnum;
 import com.leolee.msf.utils.RedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +63,7 @@ public class TestController {
     }
 
 
+    @SysLog(value = "这是一个日志记录", type = SysLogEnum.BUSSINESS)
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String getTestList() {
         return gson.toJson(testService.getTestList());
