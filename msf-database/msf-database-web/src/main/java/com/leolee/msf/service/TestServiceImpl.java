@@ -1,5 +1,6 @@
 package com.leolee.msf.service;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.leolee.msf.dao.TestMapper;
 import com.leolee.msf.entity.TestEntity;
 import com.leolee.msf.service.serviceInterface.TestService;
@@ -16,7 +17,7 @@ import java.util.List;
  * @Version V1.0
  **/
 @Service("testService")
-public class TestServiceImpl implements TestService {
+public class TestServiceImpl extends ServiceImpl<TestMapper, TestEntity> implements TestService {
 
     @Autowired
     private TestMapper testMapper;
@@ -24,5 +25,16 @@ public class TestServiceImpl implements TestService {
     @Override
     public List<TestEntity> getTestList() {
         return testMapper.selectList(null);
+    }
+
+
+    @Override
+    public TestEntity insertTest(TestEntity test) {
+        int i = testMapper.insert(test);
+        if (i > 0) {
+            return test;
+        } else {
+            return test;
+        }
     }
 }

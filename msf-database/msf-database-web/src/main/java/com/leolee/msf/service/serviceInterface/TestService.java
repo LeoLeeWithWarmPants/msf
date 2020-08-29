@@ -9,4 +9,6 @@ import java.util.List;
 public interface TestService {
 
     public List<TestEntity> getTestList();
+
+    public TestEntity insertTest(TestEntity test);
 }

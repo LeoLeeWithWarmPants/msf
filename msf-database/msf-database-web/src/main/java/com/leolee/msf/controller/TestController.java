@@ -2,6 +2,7 @@ package com.leolee.msf.controller;
 
 import com.google.gson.Gson;
 import com.leolee.msf.annotation.SysLog;
+import com.leolee.msf.entity.TestEntity;
 import com.leolee.msf.service.serviceInterface.TestService;
 import com.leolee.msf.sysEnum.SysLogEnum;
 import com.leolee.msf.utils.RedisUtils;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -67,6 +69,13 @@ public class TestController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String getTestList() {
         return gson.toJson(testService.getTestList());
+    }
+
+
+    @SysLog(value = "测试mybatis-plus雪花算法生成id", type = SysLogEnum.BUSSINESS)
+    @RequestMapping(value = "/user", method = RequestMethod.PUT)
+    public String insertTest(@RequestBody TestEntity test) {
+        return gson.toJson(testService.insertTest(test));
     }
 
 }
