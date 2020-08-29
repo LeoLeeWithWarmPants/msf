@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 日志级别从低到高分为TRACE < DEBUG < INFO < WARN < ERROR < FATAL，如果设置为WARN，则低于WARN的信息都不会输出 -->
+<!-- scan:当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。 -->
+<!-- scanPeriod:设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。 -->
+<!-- debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。 -->
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <!-- 默认配置,spring boot提供了logback的默认配置org/springframework/boot/logging/logback/base.xml,它引入了defaults.xml、console-appender.xml、file-appender.xml -->
+    <!-- defaults.xml配置了tomcat、hibernate的日志级别，规定了控制台及文件的输出格式 -->
+    <!-- console-appender.xml使用了defaults.xml规定的控制台输出格式 -->
+    <!-- file-appender.xml使用了defaults.xml规定的文件输出格式，并会按照大小和时间分片，文件最大10M -->
+    <!-- <include resource="org/springframework/boot/logging/logback/base.xml" />
+    <logger name="org.springframework.web" level="INFO"/>
+    <logger name="org.springboot.sample" level="TRACE" />-->
+
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <!-- 定义日志根目录 -->
+    <property name="LOG_PATH" value="/usr/local/log/" />
+    <!-- 定义应用名称 -->
+    <property name="APP_NAME" value="client" />
+
+    <!-- Appender to log to console -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- ${CONSOLE_LOG_PATTERN} 在defaults.xml中 -->
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 时间滚动输出 level为 INFO 日志 -->
+    <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <File>${LOG_PATH}${APP_NAME}-info.log</File>
+        <!-- ThresholdFilter:临界值过滤器，过滤掉低于指定临界值的日志。当日志级别等于或高于临界值时，过滤器返回NEUTRAL；当日志级别低于临界值时，日志会被拒绝 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>%d [%t] %5p %c:%L - %m%n</pattern>
+        </encoder>
+        <!-- 日志记录器的滚动策略，按日期，按大小记录，日志按天分类压缩保存-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <FileNamePattern>${LOG_PATH}${APP_NAME}/info/%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 时间滚动输出 level为 ERROR 日志 -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <File>${LOG_PATH}${APP_NAME}-error.log</File>
+        <!--LevelFilter: 级别过滤器，根据日志级别进行过滤。如果日志级别等于配置级别，过滤器会根据onMath 和 onMismatch接收或拒绝日志。有以下子节点：
+            <level>:设置过滤级别
+            <onMatch>:用于配置符合过滤条件的操作
+            <onMismatch>:用于配置不符合过滤条件的操作-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>%d [%t] %5p %c:%L - %m%n</pattern>
+        </encoder>
+        <!-- 日志记录器的滚动策略，按日期，按大小记录，日志按天分类压缩保存-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>256MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <FileNamePattern>${LOG_PATH}${APP_NAME}/error/%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 开发、测试环境 -->
+    <springProfile name="dev">
+        <logger name="com.leolee.eurakaconsumer" level="INFO" />
+        <logger name="org.springframework.web" level="INFO"/>
+        <root level="INFO">
+            <appender-ref ref="console"/>
+        </root>
+    </springProfile>
+
+    <!-- 生产环境 -->
+    <springProfile name="test">
+        <logger name="com.leolee.eurakaconsumer" level="ERROR" />
+        <logger name="org.springframework.web" level="INFO"/>
+        <root level="INFO">
+            <appender-ref ref="console"/>
+            <appender-ref ref="INFO_FILE"/>
+        </root>
+    </springProfile>
+
+</configuration>
