@@ -12,6 +12,23 @@ import java.util.List;
  **/
 public class GatewayRouteModel {
 
+    //{
+    //  "id":"datasourse-web-route",
+    //  "uri":"lb://DATABASE-WEB",
+    //  "order":"1",
+    //  "predicates":[
+    //    {
+    //    "name":"Path",
+    //    "args":{
+    //    		"pattern":"/datasourse-web/**"
+    //    	}
+    //    }
+    //  ],
+    //  "filters":[
+    //    {"name":"StripPrefix","args":{"_genkey_0":"1"}}
+    //  ]
+    //}
+
     /**
      * 路由的Id
      */
@@ -25,7 +42,7 @@ public class GatewayRouteModel {
     /**
      * 路由过滤器集合配置
      */
-    private List<GatewayPredicateModel> filters = new ArrayList<>();
+    private List<GatewayFilterModel> filters = new ArrayList<>();
 
     /**
      * 路由规则转发的目标uri
@@ -37,15 +54,15 @@ public class GatewayRouteModel {
      */
     private int order = 0;
 
-    /**
-     * 断言集合json字符串
-     */
-    private String predicatesJson;
-
-    /**
-     * 路由过滤器json字符串
-     */
-    private String filtersJson;
+//    /**
+//     * 断言集合json字符串
+//     */
+//    private String predicatesJson;
+//
+//    /**
+//     * 路由过滤器json字符串
+//     */
+//    private String filtersJson;
 
     public String getId() {
         return id;
@@ -63,11 +80,11 @@ public class GatewayRouteModel {
         this.predicates = predicates;
     }
 
-    public List<GatewayPredicateModel> getFilters() {
+    public List<GatewayFilterModel> getFilters() {
         return filters;
     }
 
-    public void setFilters(List<GatewayPredicateModel> filters) {
+    public void setFilters(List<GatewayFilterModel> filters) {
         this.filters = filters;
     }
 
@@ -87,19 +104,19 @@ public class GatewayRouteModel {
         this.order = order;
     }
 
-    public String getPredicatesJson() {
-        return predicatesJson;
-    }
-
-    public void setPredicatesJson(String predicatesJson) {
-        this.predicatesJson = predicatesJson;
-    }
-
-    public String getFiltersJson() {
-        return filtersJson;
-    }
-
-    public void setFiltersJson(String filtersJson) {
-        this.filtersJson = filtersJson;
-    }
+//    public String getPredicatesJson() {
+//        return predicatesJson;
+//    }
+//
+//    public void setPredicatesJson(String predicatesJson) {
+//        this.predicatesJson = predicatesJson;
+//    }
+//
+//    public String getFiltersJson() {
+//        return filtersJson;
+//    }
+//
+//    public void setFiltersJson(String filtersJson) {
+//        this.filtersJson = filtersJson;
+//    }
 }

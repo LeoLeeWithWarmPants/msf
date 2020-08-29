@@ -21,6 +21,16 @@ spring:
             - StripPrefix=1 #去掉前缀，具体实现参考StripPrefixGatewayFilterFactory
             - AddResponseHeader=X-Response-Default-Foo, Default-Bar
 
+# 暴露端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
 ---
 spring:
   profiles:
