@@ -18,6 +18,9 @@ management:
       exposure:
         include: "*"
 
+mybatis-plus:
+  mapper-locations: classpath*:**/mapper/*/*Mapper.xml
+
 ---
 spring:
   profiles:

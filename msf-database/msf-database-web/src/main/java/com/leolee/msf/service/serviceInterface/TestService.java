@@ -11,4 +11,6 @@ public interface TestService {
     public List<TestEntity> getTestList();
 
     public TestEntity insertTest(TestEntity test);
+
+    public List<TestEntity> selectAll();
 }

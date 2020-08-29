@@ -37,4 +37,10 @@ public class TestServiceImpl extends ServiceImpl<TestMapper, TestEntity> impleme
             return test;
         }
     }
+
+
+    @Override
+    public List<TestEntity> selectAll() {
+        return testMapper.selectAll();
+    }
 }

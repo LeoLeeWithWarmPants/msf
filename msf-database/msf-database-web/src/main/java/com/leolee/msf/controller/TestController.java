@@ -78,4 +78,11 @@ public class TestController {
         return gson.toJson(testService.insertTest(test));
     }
 
+
+    @SysLog(value = "测试自定义sql", type = SysLogEnum.BUSSINESS)
+    @RequestMapping(value = "/allList", method = RequestMethod.GET)
+    public String getAllList() {
+        return gson.toJson(testService.selectAll());
+    }
+
 }
