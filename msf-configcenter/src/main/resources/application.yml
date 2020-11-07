@@ -8,8 +8,8 @@ spring:
       server:
         git:
           uri: https://github.com/LeoLeeWithWarmPants/SC-config
-          username: 512240816@qq.com
-          password: lyl512240816
+          username: xxxxx
+          password: xxxxx
       label: master
   profiles:
     active: dev
