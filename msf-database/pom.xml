@@ -19,6 +19,10 @@
         <module>msf-database-model</module>
     </modules>
 
+    <properties>
+        <seata.version>1.4.0</seata.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -33,6 +37,11 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.seata</groupId>
+            <artifactId>seata-all</artifactId>
+            <version>${seata.version}</version>
         </dependency>
     </dependencies>
 
