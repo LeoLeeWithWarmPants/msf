@@ -13,4 +13,6 @@ public interface TestService {
     public TestEntity insertTest(TestEntity test);
 
     public List<TestEntity> selectAll();
+
+    public List<TestEntity> selectByName(String name);
 }

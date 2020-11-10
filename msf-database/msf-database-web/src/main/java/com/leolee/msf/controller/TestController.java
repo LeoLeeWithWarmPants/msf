@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/test")
 public class TestController {
@@ -82,7 +84,9 @@ public class TestController {
     @SysLog(value = "测试自定义sql", type = SysLogEnum.BUSSINESS)
     @RequestMapping(value = "/allList", method = RequestMethod.GET)
     public String getAllList() {
-        return gson.toJson(testService.selectAll());
+        List<TestEntity> list = testService.selectAll();
+        list.add(testService.selectByName("LeoLee").get(0));
+        return gson.toJson(list);
     }
 
 }
