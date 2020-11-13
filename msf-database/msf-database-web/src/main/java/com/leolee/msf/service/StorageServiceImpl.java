@@ -1,6 +1,8 @@
 package com.leolee.msf.service;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.leolee.msf.config.DataSourceKey;
+import com.leolee.msf.config.DynamicDataSourceContextHolder;
 import com.leolee.msf.dao.StorageMapper;
 import com.leolee.msf.entity.storage.Product;
 import com.leolee.msf.service.serviceInterface.StorageService;
@@ -28,12 +30,13 @@ public class StorageServiceImpl implements StorageService {
     @Autowired
     private StorageMapper storageMapper;
 
-    @DS("db4")
+//    @DS("storage")
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     @Override
     public boolean reduceStock(Long productId, Integer amount) throws Exception {
 
         logger.info("=====================Storage start===================");
+        DynamicDataSourceContextHolder.setDataSourceKey(DataSourceKey.STORAGE);
         logger.info("当前 XID: {}", RootContext.getXID());
 
         //检查库存

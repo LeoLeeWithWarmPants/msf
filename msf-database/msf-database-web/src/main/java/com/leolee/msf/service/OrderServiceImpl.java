@@ -1,6 +1,8 @@
 package com.leolee.msf.service;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.leolee.msf.config.DataSourceKey;
+import com.leolee.msf.config.DynamicDataSourceContextHolder;
 import com.leolee.msf.dao.OrderMapper;
 import com.leolee.msf.entity.OperationResponse;
 import com.leolee.msf.entity.order.Order;
@@ -39,12 +41,12 @@ public class OrderServiceImpl implements OrderService {
     private PayService payService;
 
     @GlobalTransactional
-    @DS("db3")
+//    @DS("order")
     @Override
     public OperationResponse placeOrder(PlaceOrderRequestVO placeOrderRequestVO) throws Exception {
 
-
         logger.info("=====================Order start===================");
+        DynamicDataSourceContextHolder.setDataSourceKey(DataSourceKey.ORDER);
         logger.info("当前 XID: {}", RootContext.getXID());
 
         //每人限购一件嗷
@@ -71,6 +73,7 @@ public class OrderServiceImpl implements OrderService {
         logger.info("=====================Order end====================");
 
         //更新订单\
+        DynamicDataSourceContextHolder.setDataSourceKey(DataSourceKey.ORDER);
         order.setStatus(OrderStatus.SUCCESS);
         Integer updateOrderRecord = orderMapper.updateById(order);
         logger.info("更新订单:{} {}", order.getId(), updateOrderRecord > 0 ? "成功" : "失败");

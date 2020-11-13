@@ -1,6 +1,8 @@
 package com.leolee.msf.service;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.leolee.msf.config.DataSourceKey;
+import com.leolee.msf.config.DynamicDataSourceContextHolder;
 import com.leolee.msf.entity.pay.Account;
 import com.leolee.msf.dao.AccountMapper;
 import com.leolee.msf.service.serviceInterface.PayService;
@@ -29,12 +31,13 @@ public class PayServiceImpl implements PayService {
     private AccountMapper accountMapper;
 
 
-    @DS("db5")
+//    @DS("pay")
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     @Override
     public boolean reduceBalance(Long userId, Integer price) throws Exception {
 
         logger.info("======================Pay start=======================");
+        DynamicDataSourceContextHolder.setDataSourceKey(DataSourceKey.PAY);
         logger.info("当前 XID: {}", RootContext.getXID());
 
         //检查余额
