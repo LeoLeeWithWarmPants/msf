@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,8 +23,13 @@ public class TestController {
     @Autowired
     LoadBalancerClient loadBalancerClient;
 
+    //org.springframework.web.client
     @Autowired
     RestTemplate restTemplate;
+
+    //org.springframework.data.redis.core
+    @Autowired
+    RedisTemplate<String,Object> redisTemplate;
 
     @Value("${hello}")
     private String hello;
