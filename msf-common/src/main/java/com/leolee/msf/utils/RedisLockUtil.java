@@ -5,7 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 /**
  * @ClassName RedisLockUtil
- * @Description: 分布式锁
+ * @Description: 分布式锁（还是存在超卖的情况，该实例仅供理解学习redis分布式锁）
  * @Author LeoLee
  * @Date 2020/11/20
  * @Version V1.0
