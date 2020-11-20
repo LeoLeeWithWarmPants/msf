@@ -1,7 +1,7 @@
 package com.leolee.msf.service;
 
 import com.leolee.msf.service.serviceInterface.DistributedTransactionService;
-import com.leolee.msf.utils.RedisLockUtil;
+import com.leolee.msf.utils.redisLock.RedisLockUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -60,6 +60,11 @@ public class DistributedTransactionServiceImpl implements DistributedTransaction
         return info;
     }
 
+
+    /*该方案存在问题
+      1.当前锁过期之后，高并发情况下多个客户端同时执行getAndSet方法，那么虽然最终只有一个客户端可以加锁，虽然其他没有获得锁的请求没有成功执行业务操作，但是覆盖了锁的value时间戳
+      2.虽然这样为了处理死锁问题，由于存在一个客户端请求在锁失效前还是没有执行完毕，甚至计算库存是否>0都没有完成，下一个客户端请求的时候，判断前一个锁已经失效，覆盖了前一个锁，所以两个线程间还是会出现超卖的问题。
+    */
     @Override
     public boolean orderByProductId(String productId) {
 
@@ -70,9 +75,10 @@ public class DistributedTransactionServiceImpl implements DistributedTransaction
             return false;
         }
 
+        boolean result = false;
         try {
             //=======================执行业务逻辑=========================
-            boolean result = false;
+
             //判断是否存在该商品
             if (checkExist(productId)) {
                 try {
@@ -94,9 +100,47 @@ public class DistributedTransactionServiceImpl implements DistributedTransaction
             redisLockUtil.deleteLock(productId, cuurentTimeMills);
         }
 
-
-        return false;
+        return result;
     }
+
+    //====================================================================================================
+    public boolean orderByProductId2(String productId) {
+
+        //加分布式锁
+        String uuid = UUID.randomUUID().toString();
+        redisLockUtil.redisLock(productId, uuid, 5000);
+
+        boolean result = false;
+        try {
+            //=======================执行业务逻辑=========================
+            //判断是否存在该商品
+            if (checkExist(productId)) {
+                try {
+                    //模拟数据库操作
+                    Thread.sleep(4000);
+                    //产生订单，扣减库存
+                    order.put(UUID.randomUUID().toString(), productId);
+                    productStockQuantity.put(productId, productStockQuantity.get(productId) - 1);
+                    result = true;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            //=======================业务逻辑结束=========================
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //解锁
+            redisLockUtil.newDeleteLock(productId, uuid);
+        }
+
+
+        return result;
+    }
+
+
+
+
 
     /*
      * 功能描述: <br>

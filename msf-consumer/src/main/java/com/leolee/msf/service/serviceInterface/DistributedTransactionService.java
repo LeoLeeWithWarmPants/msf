@@ -23,6 +23,8 @@ public interface DistributedTransactionService {
      * @Author: LeoLee
      * @Date: 2020/11/20 10:50
      */
+    @Deprecated
     public boolean orderByProductId(String productId);
+    public boolean orderByProductId2(String productId);
 
 }

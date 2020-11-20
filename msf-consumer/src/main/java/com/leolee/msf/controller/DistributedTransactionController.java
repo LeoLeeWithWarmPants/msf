@@ -54,7 +54,7 @@ public class DistributedTransactionController {
     @GetMapping("/order/{id}")
     public String order(@PathVariable(name = "id")String productId) {
 
-        boolean b = distributedTransactionService.orderByProductId(productId);
+        boolean b = distributedTransactionService.orderByProductId2(productId);
         Map<String, Object> resultMap = distributedTransactionService.getProductQuantity(productId);
         if (b) {
             resultMap.put("msg", "抢购成功");

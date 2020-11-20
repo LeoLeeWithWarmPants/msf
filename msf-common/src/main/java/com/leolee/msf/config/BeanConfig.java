@@ -1,7 +1,7 @@
 package com.leolee.msf.config;
 
 import com.google.gson.Gson;
-import com.leolee.msf.utils.RedisLockUtil;
+import com.leolee.msf.utils.redisLock.RedisLockUtil;
 import com.leolee.msf.utils.RedisUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;

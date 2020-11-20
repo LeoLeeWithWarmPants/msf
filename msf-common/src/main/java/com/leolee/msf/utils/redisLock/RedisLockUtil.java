@@ -1,7 +1,11 @@
-package com.leolee.msf.utils;
+package com.leolee.msf.utils.redisLock;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @ClassName RedisLockUtil
@@ -15,6 +19,9 @@ public class RedisLockUtil {
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
 
+
+    //========================方案1============================
+
     /*
      * 功能描述: <br>
      * 〈分布式锁——加锁〉
@@ -23,6 +30,7 @@ public class RedisLockUtil {
      * @Author: LeoLee
      * @Date: 2020/11/20 12:24
      */
+    @Deprecated
     public boolean redisLock(String key, String timeMillis) {
 
         //加锁成功直接返回true，证明目前还没有该key
@@ -43,6 +51,7 @@ public class RedisLockUtil {
         return false;
     }
 
+    @Deprecated
     public boolean deleteLock(String key, String timeMillis) {
 
         if (String.valueOf(redisTemplate.opsForValue().get(key)).equals(timeMillis)) {
@@ -50,4 +59,44 @@ public class RedisLockUtil {
         }
         return false;
     }
+
+
+    //========================方案2============================
+    ExtensionExpirationTime extensionExpirationTime = null;
+    /*
+     * 功能描述: <br>
+     * 〈分布式加锁，延长过期时间版〉
+     * @Param: [key, value, time]
+     * @Return: boolean
+     * @Author: LeoLee
+     * @Date: 2020/11/20 17:02
+     */
+    public boolean redisLock(String key, String value, long time) {
+
+
+        if (redisTemplate.opsForValue().setIfAbsent(key, value, time, TimeUnit.MILLISECONDS)) {
+
+            extensionExpirationTime = new ExtensionExpirationTime(key, value, time, redisTemplate);
+            extensionExpirationTime.start();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean newDeleteLock(String key, String value) {
+
+        if (String.valueOf(redisTemplate.opsForValue().get(key)).equals(value)) {
+            extensionExpirationTime.interrupt();//终止续期线程
+            if (extensionExpirationTime.isInterrupted()) {
+                try {
+                    extensionExpirationTime.stop();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return redisTemplate.delete(key);
+        }
+        return false;
+    }
+
 }
