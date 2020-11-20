@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
  * @Date 2020/8/20
  * @Version V1.0
  **/
-@Component
 public class RedisUtils {
 
     /**
