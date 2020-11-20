@@ -1,6 +1,7 @@
 package com.leolee.msf.config;
 
 import com.google.gson.Gson;
+import com.leolee.msf.utils.RedisLockUtil;
 import com.leolee.msf.utils.RedisUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -23,5 +24,10 @@ public class BeanConfig {
     @Bean
     public RedisUtils redisUtils() {
         return new RedisUtils();
+    }
+
+    @Bean
+    public RedisLockUtil redisLockUtil() {
+        return new RedisLockUtil();
     }
 }
