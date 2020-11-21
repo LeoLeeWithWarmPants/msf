@@ -2,6 +2,8 @@ package com.leolee.msf.service;
 
 import com.leolee.msf.service.serviceInterface.DistributedTransactionService;
 import com.leolee.msf.utils.redisLock.RedisLockUtil;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @ClassName DistributedTransactionServiceImpl
@@ -25,6 +29,9 @@ public class DistributedTransactionServiceImpl implements DistributedTransaction
 
     @Autowired
     RedisLockUtil redisLockUtil;
+
+    @Autowired
+    RedissonClient redissonClient;
 
 
 
@@ -61,6 +68,7 @@ public class DistributedTransactionServiceImpl implements DistributedTransaction
     }
 
 
+    //===========================================方案1========================================================
     /*该方案存在问题
       1.当前锁过期之后，高并发情况下多个客户端同时执行getAndSet方法，那么虽然最终只有一个客户端可以加锁，虽然其他没有获得锁的请求没有成功执行业务操作，但是覆盖了锁的value时间戳
       2.虽然这样为了处理死锁问题，由于存在一个客户端请求在锁失效前还是没有执行完毕，甚至计算库存是否>0都没有完成，下一个客户端请求的时候，判断前一个锁已经失效，覆盖了前一个锁，所以两个线程间还是会出现超卖的问题。
@@ -103,7 +111,7 @@ public class DistributedTransactionServiceImpl implements DistributedTransaction
         return result;
     }
 
-    //====================================================================================================
+    //===========================================方案2（另起线程续期）========================================================
     public boolean orderByProductId2(String productId) {
 
         //加分布式锁
@@ -139,9 +147,6 @@ public class DistributedTransactionServiceImpl implements DistributedTransaction
     }
 
 
-
-
-
     /*
      * 功能描述: <br>
      * 〈检查商品是否存在，是否有库存〉
@@ -154,4 +159,87 @@ public class DistributedTransactionServiceImpl implements DistributedTransaction
 
         return total.containsKey(productId) && productStockQuantity.containsKey(productId) && productStockQuantity.get(productId) > 0 ? true : false;
     }
+
+    //===========================================方案3（redisson）========================================================
+    private static final String PRODUCT_LOCK_TITLE = "product_";
+    public boolean orderByProductId3(String productId) {
+
+        //redisson加锁
+        RLock lock = redissonClient.getLock(PRODUCT_LOCK_TITLE + productId);
+        //获取锁，直到该锁释放，其他待获取锁的线程，一直处于阻塞状态
+        //缺点：当前服务意外宕机，redis锁将无法得到释放
+//        lock.lock();
+        // 加锁以后10秒钟自动解锁
+        // 无需调用unlock方法手动解锁
+//        lock.lock(10, TimeUnit.SECONDS);
+        // 尝试加锁，最多等待100秒，上锁以后10秒自动解锁
+        boolean res = false;
+        try {
+            res = lock.tryLock(100, 10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        boolean result = false;
+        try {
+            //=======================执行业务逻辑=========================
+            //判断是否存在该商品
+            if (checkExist(productId) && res) {
+                try {
+                    //模拟数据库操作
+                    Thread.sleep(1000*2);
+                    //产生订单，扣减库存
+                    order.put(UUID.randomUUID().toString(), productId);
+                    productStockQuantity.put(productId, productStockQuantity.get(productId) - 1);
+                    result = true;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            //=======================业务逻辑结束=========================
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //解锁
+            lock.unlock();
+        }
+        return result;
+    }
+
+    public boolean orderByProductId4(String productId) {
+
+        //redisson加锁
+        RLock lock = redissonClient.getLock(PRODUCT_LOCK_TITLE + productId);
+        Future<Boolean> res = lock.tryLockAsync(30, 10, TimeUnit.SECONDS);
+
+        //此时获取锁的行为并不会阻塞代码，可以执行其他业务逻辑
+        //do something......
+
+        boolean result = false;
+        try {
+            //=======================执行业务逻辑=========================
+            //判断是否存在该商品
+            if (checkExist(productId) && res.get()) {
+                try {
+                    //模拟数据库操作
+                    Thread.sleep(1000*2);
+                    //产生订单，扣减库存
+                    order.put(UUID.randomUUID().toString(), productId);
+                    productStockQuantity.put(productId, productStockQuantity.get(productId) - 1);
+                    result = true;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            //=======================业务逻辑结束=========================
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //解锁
+            lock.unlock();
+        }
+        return result;
+    }
+
+
 }

@@ -26,5 +26,7 @@ public interface DistributedTransactionService {
     @Deprecated
     public boolean orderByProductId(String productId);
     public boolean orderByProductId2(String productId);
+    public boolean orderByProductId3(String productId);
+    public boolean orderByProductId4(String productId);
 
 }
